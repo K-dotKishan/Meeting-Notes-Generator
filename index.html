@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>✨ Meeting Notes Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+            },
+            dark: {
+              800: '#1e293b',
+              900: '#0f172a',
+            },
+            slate: {
+              850: '#18212f'
+            }
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'fade-in': 'fadeIn 0.5s ease-out',
+            'slide-up': 'slideUp 0.3s ease-out'
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' },
+            },
+            slideUp: {
+              '0%': { transform: 'translateY(10px)', opacity: '0' },
+              '100%': { transform: 'translateY(0)', opacity: '1' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .text-gradient {
+        @apply bg-gradient-to-r from-primary-500 to-primary-600 bg-clip-text text-transparent;
+      }
+      .shadow-chat {
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+      .dark .shadow-chat {
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+      }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-dark-900 dark:to-slate-850 min-h-screen transition-colors duration-500">
+  <div class="container mx-auto px-4 py-8 max-w-4xl">
+   
+    <div class="flex justify-between items-center mb-8 animate-float">
+      <div class="flex items-center space-x-4">
+        <div class="p-3 bg-white dark:bg-dark-800 rounded-xl shadow-md">
+          <i class="fas fa-clipboard-list text-3xl text-gradient"></i>
+        </div>
+        <div>
+          <h1 class="text-4xl font-bold text-gray-800 dark:text-white">
+            <span class="text-gradient">Meeting Notes</span> Generator
+          </h1>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            Transform discussions into structured notes instantly
+          </p>
+        </div>
+      </div>
+      <button id="mode-toggle" class="p-3 rounded-xl bg-white dark:bg-dark-800 shadow-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300 transform hover:scale-105">
+        <i class="fas fa-moon dark:hidden"></i>
+        <i class="fas fa-sun hidden dark:block"></i>
+      </button>
+    </div>
+
+    <!-- Main chat container -->
+    <div class="bg-white dark:bg-dark-800 rounded-2xl shadow-chat overflow-hidden transition-all duration-500 animate-fade-in">
+      <!-- Chat header -->
+      <div class="bg-gradient-to-r from-primary-500 to-primary-600 p-4 text-white">
+        <div class="flex items-center space-x-3">
+          <div class="p-2 bg-white/20 rounded-full">
+            <i class="fas fa-robot"></i>
+          </div>
+          <div>
+            <h2 class="font-bold">AI Meeting Assistant</h2>
+            <p class="text-xs opacity-80">Ready to summarize your discussions</p>
+          </div>
+          <div class="ml-auto flex space-x-2">
+            <div class="w-3 h-3 bg-white/50 rounded-full"></div>
+            <div class="w-3 h-3 bg-white/50 rounded-full"></div>
+            <div class="w-3 h-3 bg-white/50 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+
+      
+      <div id="chat-box" class="h-[28rem] p-6 overflow-y-auto space-y-4 bg-gradient-to-b from-gray-50 to-white dark:from-dark-900 dark:to-slate-850">
+        <div class="flex flex-col items-center justify-center h-full text-center animate-fade-in">
+          <div class="mb-6 p-5 bg-white dark:bg-dark-800 rounded-full shadow-lg">
+            <i class="fas fa-comments text-4xl text-gradient"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">Start a meeting discussion</h3>
+          <p class="text-gray-500 dark:text-gray-400 max-w-md">
+            Type your meeting conversation and I'll generate beautiful, structured notes with action items, decisions, and key points.
+          </p>
+          <div class="mt-6 flex space-x-3">
+            <div class="px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-full text-sm text-gray-600 dark:text-gray-300 animate-slide-up" style="animation-delay: 0.1s">
+              <i class="fas fa-lightbulb mr-2 text-primary-500"></i> Decisions
+            </div>
+            <div class="px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-full text-sm text-gray-600 dark:text-gray-300 animate-slide-up" style="animation-delay: 0.2s">
+              <i class="fas fa-tasks mr-2 text-primary-500"></i> Action Items
+            </div>
+            <div class="px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-full text-sm text-gray-600 dark:text-gray-300 animate-slide-up" style="animation-delay: 0.3s">
+              <i class="fas fa-star mr-2 text-primary-500"></i> Key Points
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input area -->
+      <div class="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-dark-800">
+        <div class="flex items-end gap-3">
+          <div class="flex-1 relative">
+            <textarea
+              id="user-input"
+              rows="1"
+              placeholder="Type your meeting discussion or paste transcript..."
+              class="w-full px-5 py-4 pr-12 rounded-xl border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white resize-none transition-all duration-200"
+              oninput="autoGrow(this)"
+              onkeydown="if(event.key === 'Enter' && !event.shiftKey) {event.preventDefault(); sendMessage();}"
+            ></textarea>
+            <button 
+              onclick="sendMessage()"
+              class="absolute right-3 bottom-3 p-2 text-gray-500 hover:text-primary-500 transition-colors"
+            >
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+          <button 
+            onclick="sendMessage()" 
+            class="px-5 py-4 bg-primary-500 hover:bg-primary-600 text-white rounded-xl font-medium transition-all duration-300 transform hover:scale-105 flex items-center gap-2 shadow-md"
+          >
+            <span class="hidden sm:inline">Generate</span>
+            <i class="fas fa-magic"></i>
+          </button>
+        </div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+          Tip: Include key discussion points for more accurate notes
+        </p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="mt-6 text-center">
+      <div class="inline-flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
+        <span><i class="fas fa-shield-alt mr-1"></i> Private</span>
+        <span><i class="fas fa-bolt mr-1"></i> Instant</span>
+        <span><i class="fas fa-gem mr-1 text-gradient"></i> Powered by Gemini</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_KEY = "AIzaSyASI-lW5b4O4fILI5A5K0WjqXfUfGS5WQg"; // Your Gemini API Key
+
+    function autoGrow(element) {
+      element.style.height = "auto";
+      element.style.height = (element.scrollHeight) + "px";
+    }
+
+    function sendMessage() {
+      const userInput = document.getElementById("user-input");
+      const chatBox = document.getElementById("chat-box");
+      const userMessage = userInput.value.trim();
+
+      if (userMessage === "") return;
+
+      // Remove initial placeholder if present
+      if (chatBox.children.length === 1 && chatBox.children[0].classList.contains('flex-col')) {
+        chatBox.innerHTML = '';
+      }
+
+      // Display user's message with animation
+      chatBox.innerHTML += `
+        <div class="animate-slide-up">
+          <div class="flex justify-end">
+            <div class="max-w-[85%] bg-primary-500 text-white p-4 rounded-2xl rounded-tr-none shadow-md">
+              <div class="flex items-center justify-between mb-1">
+                <div class="font-medium flex items-center">
+                  <i class="fas fa-user mr-2"></i> You
+                </div>
+                <div class="text-xs opacity-70">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+              </div>
+              <div class="whitespace-pre-wrap">${userMessage}</div>
+            </div>
+          </div>
+        </div>
+      `;
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      // Show typing indicator
+      const typingId = Date.now();
+      chatBox.innerHTML += `
+        <div id="${typingId}" class="animate-fade-in">
+          <div class="flex justify-start">
+            <div class="max-w-[85%] bg-gray-100 dark:bg-gray-700 p-4 rounded-2xl rounded-tl-none shadow-md">
+              <div class="flex items-center justify-between mb-1">
+                <div class="font-medium flex items-center">
+                  <i class="fas fa-robot mr-2 text-primary-500"></i> Assistant
+                </div>
+                <div class="text-xs opacity-70">Typing...</div>
+              </div>
+              <div class="flex space-x-2 pl-2">
+                <div class="w-2.5 h-2.5 rounded-full bg-gray-400 animate-bounce"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-gray-400 animate-bounce" style="animation-delay: 0.2s"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-gray-400 animate-bounce" style="animation-delay: 0.4s"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      // Clear input and reset height
+      userInput.value = "";
+      userInput.style.height = "auto";
+
+      // Call Gemini API
+      fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro-002:generateContent?key=${API_KEY}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ 
+            parts: [{ 
+              text: `Generate professional meeting notes with this structure:
+
+# Meeting Summary
+- Concise overview of discussion
+
+# Key Decisions
+- Bullet points of important decisions
+- Include reasoning if important
+
+# Action Items
+- [ ] Task 1 (Owner: Name, Deadline: Date)
+- [ ] Task 2 (Owner: Name, Deadline: Date)
+
+# Discussion Points
+- Main topics covered
+- Important arguments or considerations
+
+# Next Steps
+- What needs to happen next
+- Any follow-up required
+
+From this meeting transcript:
+${userMessage}`
+            }] 
+          }]
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Remove typing indicator
+        document.getElementById(typingId).remove();
+        
+        let botReply = "Sorry, I couldn't generate a response. Please try again.";
+        if (data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+          botReply = data.candidates[0].content.parts[0].text;
+          // Format response with markdown-like styling
+          botReply = botReply
+            .replace(/^# (.*$)/gm, '<h3 class="text-xl font-bold mt-4 mb-2 text-primary-500">$1</h3>')
+            .replace(/^## (.*$)/gm, '<h4 class="text-lg font-semibold mt-3 mb-1 dark:text-white">$1</h4>')
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/- \[ \] (.*)/g, '<div class="flex items-start mb-1"><input type="checkbox" class="mt-1 mr-2"><span>$1</span></div>')
+            .replace(/- \[x\] (.*)/g, '<div class="flex items-start mb-1"><input type="checkbox" checked class="mt-1 mr-2"><span class="opacity-70">$1</span></div>')
+            .replace(/- (.*)/g, '<li class="mb-1">$1</li>')
+            .replace(/\n/g, '<br>');
+        }
+
+        // Display bot's response with animation
+        chatBox.innerHTML += `
+          <div class="animate-slide-up">
+            <div class="flex justify-start">
+              <div class="max-w-[85%] bg-gray-100 dark:bg-gray-700 p-4 rounded-2xl rounded-tl-none shadow-md">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="font-medium flex items-center">
+                    <i class="fas fa-robot mr-2 text-primary-500"></i> Assistant
+                  </div>
+                  <div class="text-xs opacity-70">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                </div>
+                <div class="prose dark:prose-invert max-w-none meeting-notes">
+                  ${botReply}
+                </div>
+                <div class="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600 flex justify-end">
+                  <button onclick="copyNotes(this)" class="text-xs flex items-center text-gray-500 hover:text-primary-500">
+                    <i class="fas fa-copy mr-1"></i> Copy Notes
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        document.getElementById(typingId).remove();
+        chatBox.innerHTML += `
+          <div class="animate-fade-in">
+            <div class="flex justify-start">
+              <div class="max-w-[85%] bg-gray-100 dark:bg-gray-700 p-4 rounded-2xl rounded-tl-none shadow-md">
+                <div class="font-medium flex items-center mb-1">
+                  <i class="fas fa-robot mr-2 text-primary-500"></i> Assistant
+                </div>
+                <div class="text-red-500 dark:text-red-400">
+                  <i class="fas fa-exclamation-circle mr-2"></i>
+                  An error occurred while generating the response. Please try again.
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      });
+    }
+
+    function copyNotes(button) {
+      const notes = button.closest('.flex.justify-start').querySelector('.meeting-notes').innerText;
+      navigator.clipboard.writeText(notes);
+      button.innerHTML = '<i class="fas fa-check mr-1"></i> Copied!';
+      setTimeout(() => {
+        button.innerHTML = '<i class="fas fa-copy mr-1"></i> Copy Notes';
+      }, 2000);
+    }
+
+    // Dark/Light mode toggle
+    document.getElementById("mode-toggle").addEventListener("click", () => {
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('darkMode', document.documentElement.classList.contains('dark'));
+    });
+
+    // Check for saved preference or system preference
+    if (localStorage.getItem('darkMode') === 'true' || 
+        (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    }
+
+    // Auto-focus input on load
+    document.getElementById("user-input").focus();
+  </script>
+</body>
+</html>
